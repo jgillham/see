@@ -1,5 +1,6 @@
 // This class will hold the data for a lotto drawing;
 public class LottoGame {
+/* Doesn't compile
     private final Date drawingDate;
     private final List <Integer> winningNumbers;
     private final double jackpot; // This may or may not be used depending on what data we decide to analyze
@@ -31,4 +32,5 @@ public class LottoGame {
     public double getJackpot ( ) { 
 	return this.jackpot;
     }
+*/
 }

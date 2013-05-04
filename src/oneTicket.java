@@ -1,4 +1,5 @@
-public class oneTicket implements Strategies {
+public class oneTicket {
+/* Doesn't compile
     //int numPlays;
     
     public oneTicket ( final int numPlays, final List <LottoGame> history ) {
@@ -24,5 +25,5 @@ public class oneTicket implements Strategies {
     public static void graphData ( ) { // If we find an easy way to generate graphs
 
     }
-
+*/
 }
