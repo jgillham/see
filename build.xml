@@ -80,6 +80,15 @@
             <arg value="test"/>
         </java>
     </target>
+    
+    <!-- Run experiment 1. -->
+    <target name = "exp1" depends = "build">
+        <java classname = "Experiment" classpath = "${cp}"
+         failonerror = "true" >
+            <!-- Designate experiment 1 -->
+            <arg value="1"/>
+        </java>
+    </target>
 
     <!-- We need test units. -->
     <target name = "test" depends = "debug,build">
