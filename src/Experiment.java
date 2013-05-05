@@ -1,3 +1,9 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.util.List;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
+
 /**
  * The experiment runner sets up and runs an experiment.
  *
@@ -21,6 +27,15 @@ public enum Experiment {
     ;
     /** Set to true to enable debugging. */
     static public boolean DEBUG = false;
+    public enum Argument {
+        FILE_NAME
+        ,
+        ALGORITHM
+        ,
+        OUTPUT_PREFIX
+        ;
+    }
+    static public final int MIN_ARGUMENTS = Argument.values().length;
     /** Potential error values. */
     public enum Error {
         /** No arguments were given to the program. */
@@ -29,8 +44,16 @@ public enum Experiment {
         /** The experiment is not defined. */
         NO_SUCH_EXPERIMENT
         ,
+        NO_FILE
+        ,
         /** The experiment has not been implimented. */
         UNIMPLEMENTED_EXPERIMENT
+        ,
+        UNIMPLEMENTED_ARGUMENT
+        ,
+        GENERIC_ERROR
+        ,
+        BAD_FILE_FORMAT
         ;
     }
     
@@ -47,28 +70,77 @@ public enum Experiment {
             }
         }
         // Check for minimum arguments.
-        if ( args.length < 1 ) {
+        if ( args.length < MIN_ARGUMENTS ) {
             printUsage();
             System.exit( Error.NO_ARGUMENTS.ordinal() );
         }
+        System.out.println( "Test1" );
         // Select an experiment using the arguments.
         Experiment choice = null;
+        String file = null;
+        String outputPrefix = null;
         try {
-            choice = Experiment.values()[ Integer.valueOf( args[0] ) ];
+            for ( Argument arg : Argument.values() ) {
+                System.out.println( "Test1a" );
+                String argument = args[ arg.ordinal() ];
+                switch ( arg ) {
+                case FILE_NAME:
+                    file = argument;
+                    File temp = new File( file );
+                    if ( !temp.exists() ) {
+                        System.out.println( "File does not exist." );
+                        printUsage();
+                        System.exit( Error.NO_FILE.ordinal() );
+                    }
+                break;
+                case ALGORITHM:
+                    choice = Experiment.values()[ Integer.valueOf( argument ) ];
+                    if ( choice == NONE ) {
+                        System.out.println( "Bad experiment choice." );
+                        printUsage();
+                        System.exit( Error.NO_SUCH_EXPERIMENT.ordinal() );
+                    }
+                break;
+                case OUTPUT_PREFIX:
+                    outputPrefix = argument;
+                break;
+                default:
+                    System.out.println( "Argument needs implementation." );
+                    printUsage();
+                    System.exit( Error.UNIMPLEMENTED_ARGUMENT.ordinal() );
+                }
+            }
         }
         catch ( Exception e ) {
+            e.printStackTrace();
             System.out.println( "Bad experiment choice." );
             printUsage();
-            System.exit( Error.NO_SUCH_EXPERIMENT.ordinal() );
+            System.exit( Error.GENERIC_ERROR.ordinal() );
         }
+        System.out.println( "Test2" );
+        // Try to parse the file in.
+        List<Drawing> lottoHistory = null;
+        try {
+            System.out.println( "Test2a" );
+            lottoHistory = Plays.storeLottoHistory ( file );
+            System.out.println( "Test2a.i" );
+        }
+        catch ( java.io.FileNotFoundException e ) {
+            System.out.println( "File does not exist." );
+            e.printStackTrace();
+            printUsage();
+            System.exit( Error.NO_FILE.ordinal() );
+        }
+        catch ( Plays.BadFileFormatException e ) {
+            e.printStackTrace();
+            System.exit( Error.BAD_FILE_FORMAT.ordinal() );
+        }
+        System.out.println( "Test2b" );
         // Run the selected experiment.
         switch ( choice ) {
-        case NONE:
-            System.out.println( "Bad experiment choice." );
-            printUsage();
-            System.exit( Error.NO_SUCH_EXPERIMENT.ordinal() );
         case STUBORN_PLAYER:
-            runStubornPlayer();
+            System.out.println( "Test3" );
+            runStubornPlayer( lottoHistory, outputPrefix );
         break;
         case MANIAC_PLAYER:
         case PICKY_HIGH_NUMBERS_PLAYER:
@@ -87,6 +159,21 @@ public enum Experiment {
     }
     
     /** Run the stuborn player experiment. */
-    static public void runStubornPlayer() {
+    static public void runStubornPlayer( List<Drawing> lottoHistory, String outputPrefix ) {
+        System.out.println( "Test3a" );
+        PrintStream standardOut = System.out;
+        oneTicket current = new oneTicket( 1, lottoHistory );
+        List< Hit > hits = current.analyze( current.play( lottoHistory ), lottoHistory );
+        ByteArrayOutputStream outputCollector = new ByteArrayOutputStream();
+        System.setOut( new PrintStream( outputCollector ) );
+        current.printResults( hits );
+        System.setOut( standardOut );
+        try {
+            FileWriter outputFile = new FileWriter( outputPrefix );
+            outputFile.write( outputCollector.toString() );
+        }
+        catch ( java.io.IOException e ) {
+            e.printStackTrace();
+        }
     }
 }

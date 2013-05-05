@@ -16,6 +16,8 @@ public class Drawing {
 
     /** The JackPot for this drawing. */
     private double jackpot;
+    public Drawing (  ) {
+    }
 
     /** This counstructor sets all instance variables 
      * 

@@ -10,19 +10,40 @@ import java.io.*;
  */
 public class Plays {
     private static Calendar cal = Calendar.getInstance();
-    private static List<Drawing> lottoHistory;
-    private static List<Strategy> strategies; // Add your strategies to this list
-    
+    private List<Drawing> lottoHistory;
+    // Add your strategies to this list
+    private List<Strategy> strategies; 
+    static public class BadFileFormatException extends Exception {
+        public BadFileFormatException( Throwable cause ) {
+            super( cause );
+        }
+    }
     public static void main( String[] args ) {
-	lottoHistory = storeLottoHistory ( args [0] );
-	playStrategies ( strategies );
+        try {
+            List<Drawing> lottoHistory = storeLottoHistory ( args [0] );
+        }
+        catch ( FileNotFoundException e ) {
+            System.exit( 1 );
+        }
+        catch ( BadFileFormatException e ) {
+            System.exit( 1 );
+        }
+        // XXX Add sample code to boot strap simulation.
+    }
+    public Plays( List< Drawing > lottoHistory, List< Strategy > strategies ) {
+        this.lottoHistory = lottoHistory;
+        this.strategies = strategies;
+    }
+    private void playStrategies (  ) {
+        playStrategies( this.lottoHistory, this.strategies );
     }
 
     /** Read lottery data from file specified on command line
      *  @param fileName Name of file holding lottery data
      *  @return games A list of lottoGame objects created from lottery history 
      */
-    private static List<Drawing> storeLottoHistory ( String fileName ) {
+    public static List<Drawing> storeLottoHistory ( String fileName )
+     throws BadFileFormatException, FileNotFoundException {
 	ArrayList<Drawing> games = new ArrayList<Drawing> ( );
 	ArrayList<Integer> gameNumbers;
 	StringTokenizer st;
@@ -44,17 +65,13 @@ public class Plays {
 		    //}
 	    }
 	}
-
-	catch ( FileNotFoundException e ) {
-	    System.out.println ( e );
-	}
-
 	/*catch ( IOException e ) {
 	    System.out.println ( e );
 	    }*/
 	
 	catch ( NumberFormatException e ) {
-	    System.out.println ( e );
+            //e.printStackTrace();
+            throw new BadFileFormatException( e );
 	}
 	
 	return games;
@@ -64,7 +81,8 @@ public class Plays {
      *
      * @param strats list of strategies
      */
-    private static void playStrategies ( List<Strategy> strats ) {
+    private static void playStrategies ( List<Drawing> lottoHistory, 
+     List<Strategy> strats ) {
 	Strategy current;
 	for ( int i = 0; i < strats.size ( ); i++ ) {
 	    current = strats.get ( i );

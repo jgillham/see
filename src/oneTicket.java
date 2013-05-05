@@ -1,11 +1,12 @@
 import java.util.List;
 public class oneTicket implements Strategy {
-    //int numPlays;
+    int numPlays;
+    final List <Drawing> history;
     
     public oneTicket ( final int numPlays, final List <Drawing> history ) {
-	//this.numPlays = numPlays;
+	this.numPlays = numPlays;
+	this.history = history;
         // Method headers will be adjusted later
-	printResults ( analyze ( play ( history ), history ) ); 
     }
     public List< Ticket > play ( final List< Drawing > history ) {
         throw new UnsupportedOperationException( "Please implement." );
