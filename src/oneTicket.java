@@ -1,29 +1,20 @@
-public class oneTicket {
-/* Doesn't compile
+import java.util.List;
+public class oneTicket implements Strategy {
     //int numPlays;
     
-    public oneTicket ( final int numPlays, final List <LottoGame> history ) {
+    public oneTicket ( final int numPlays, final List <Drawing> history ) {
 	//this.numPlays = numPlays;
-	printResults ( analyze ( play ( numPlays, history ) ) ); // Method headers will be adjusted later
+        // Method headers will be adjusted later
+	printResults ( analyze ( play ( history ), history ) ); 
     }
-
-    public static void play ( final int numPlays, final List <LottoGame> history ) {
-	for ( int i = 0; i <= numPlays; i++ ) {
-	    
-
-	}
+    public List< Ticket > play ( final List< Drawing > history ) {
+        throw new UnsupportedOperationException( "Please implement." );
     }
-
-    public static void analyze ( ) {
-
+    public List< Hit > analyze ( final List< Ticket > tickets,
+     final List< Drawing > history ) {
+        throw new UnsupportedOperationException( "Please implement." );
     }
-
-    public static void printResults ( ) {
-
+    public void printResults ( List< Hit > hits ) {
+        throw new UnsupportedOperationException( "Please implement." );
     }
-
-    public static void graphData ( ) { // If we find an easy way to generate graphs
-
-    }
-*/
 }

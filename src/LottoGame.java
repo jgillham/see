@@ -31,24 +31,29 @@ public class LottoGame {
      * 
      * @return drawingDate
      */
+    /*
     public Date getDrawingDate ( ) {
 	return this.drawingDate;
     }
+    */
     
     /* This method gets the winning numbers for a game
      * 
      * @return winngingNumbers
      */
+    /*
     public List<Integer> getWinningNumbers ( ) {
 	return this.winningNumbers;
     }
+    */
 
     /* This method gets the jackpot for a game
      * 
      * @return jackpot
      */
+    /*
     public double getJackpot ( ) { 
 	return this.jackpot;
     }
-*/
+    */
 }
