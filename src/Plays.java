@@ -51,6 +51,8 @@ public class Plays {
 
 	try { // This is hardcoded for our CO data set but it can easily be fixed 
 	    Scanner infile = new Scanner ( new FileReader ( fileName ) );
+            // Skip header.
+            infile.nextLine();
 	    while ( infile.hasNextLine ( ) ) {
 		gameNumbers = new ArrayList<Integer> ( );
 		line = infile.nextLine ( );

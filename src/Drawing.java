@@ -1,5 +1,7 @@
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /** This class will hold the data from a lottery drawing
  *

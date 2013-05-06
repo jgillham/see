@@ -12,4 +12,8 @@ import java.util.*;
 public class Ticket extends Drawing {
     /** Accumulated winnings for playing ticket---> We may not use this! */
 	double winnings;
+    public Ticket( final Date drawingDate, final List<Integer> winningNumbers, 
+     final double jackpot ) {
+        super( drawingDate, winningNumbers, jackpot );
+    }
 }

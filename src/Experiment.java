@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
+import java.util.ArrayList;
 import java.io.PrintStream;
 import java.io.ByteArrayOutputStream;
 
@@ -162,18 +163,41 @@ public enum Experiment {
     static public void runStubornPlayer( List<Drawing> lottoHistory, String outputPrefix ) {
         System.out.println( "Test3a" );
         PrintStream standardOut = System.out;
-        oneTicket current = new oneTicket( 1, lottoHistory );
-        List< Hit > hits = current.analyze( current.play( lottoHistory ), lottoHistory );
-        ByteArrayOutputStream outputCollector = new ByteArrayOutputStream();
-        System.setOut( new PrintStream( outputCollector ) );
-        current.printResults( hits );
-        System.setOut( standardOut );
-        try {
-            FileWriter outputFile = new FileWriter( outputPrefix );
-            outputFile.write( outputCollector.toString() );
+        final int TRIALS = 20;
+        final int MIN_NUM = 1;
+        final int MAX_NUM = 42;
+        final int MIN_PICKS = 6;
+        for ( int i = 0; i < TRIALS; ++i ) {
+            List< Integer > universe = range( MIN_NUM, MAX_NUM, 
+             new ArrayList<Integer>( MAX_NUM - MIN_NUM + 1 ) );
+
+            List< Integer > picks = new ArrayList< Integer >( MAX_NUM - MIN_NUM + 1 );
+            while ( picks.size() < MIN_PICKS ) {
+                Integer select = universe.get( 
+                 (int)( Math.random() * picks.size() ) );
+                universe.remove( select );
+                picks.add( select );
+            }
+            oneTicket current = new oneTicket( picks, lottoHistory );
+            List< Hit > hits = current.analyze( current.play( lottoHistory ), lottoHistory );
+            ByteArrayOutputStream outputCollector = new ByteArrayOutputStream();
+            System.setOut( new PrintStream( outputCollector ) );
+            current.printResults( hits );
+            System.setOut( standardOut );
+            try {
+                FileWriter outputFile = new FileWriter( 
+                 String.format( "%s-stubborn-%03d.csv", outputPrefix, i ) );
+                outputFile.write( outputCollector.toString() );
+            }
+            catch ( java.io.IOException e ) {
+                e.printStackTrace();
+            }
         }
-        catch ( java.io.IOException e ) {
-            e.printStackTrace();
+    }
+    static public List<Integer> range( int min, int max, List<Integer> list ) {
+        for ( int i = min; i <= max; ++i ) {
+            list.add( i );
         }
+        return list;
     }
 }

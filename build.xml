@@ -27,6 +27,7 @@
         </delete>
         <delete dir = "${target.base}"/>
         <delete dir = "**/doc"/>
+        <delete dir = "results"/>
     </target>
     <target name = "debug"> 
         <property name="debug.use" value="true"/>
@@ -35,6 +36,7 @@
         <mkdir dir = "${target.base}"/>
         <mkdir dir = "${source}"/>
         <mkdir dir = "${source.test}"/>
+        <mkdir dir = "results"/>
         <!-- <mkdir dir = "results"/> -->
     </target>
 
@@ -90,7 +92,7 @@
             <!-- Designate experiment 1 -->
             <arg value="1"/>
             <!-- Output prefix. -->
-            <arg value="results/output.csv"/>
+            <arg value="results/output"/>
         </java>
     </target>
 
