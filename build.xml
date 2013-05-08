@@ -96,6 +96,19 @@
         </java>
     </target>
 
+    <!-- Run experiment 3. -->
+    <target name = "exp3" depends = "build">
+        <java classname = "Experiment" classpath = "${cp}"
+         failonerror = "true" >
+            <!-- File name. -->
+            <arg value="src/AllDrawingArchiveTable.csv"/>
+            <!-- Designate experiment 3 -->
+            <arg value="3"/>
+            <!-- Output prefix. -->
+            <arg value="results/output"/>
+        </java>
+    </target>
+
     <!-- We need test units. -->
     <target name = "test" depends = "debug,build">
         <junit printsummary = "yes" haltonfailure = "true">
